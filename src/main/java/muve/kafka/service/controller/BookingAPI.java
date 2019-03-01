@@ -56,10 +56,10 @@ public class BookingAPI {
         return store.getByBookingId(id);
     }
 	
-	@DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") String id) {
-        muveProducer.deleteMessage(id);
-    }
+//	@DeleteMapping("/{id}")
+//    public void delete(@PathVariable("id") String id) {
+//        muveProducer.deleteMessage(id);
+//    }
 
     @PutMapping("/{id}")
     public void update(@PathVariable("id") String id, @RequestBody Booking book) {

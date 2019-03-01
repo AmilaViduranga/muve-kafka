@@ -12,8 +12,17 @@ public class Booking {
     private String eventId;
     private String createdDate;
     private long offsetId;
+    private String action;
     
     
+    
+    
+	public String getAction() {
+		return action;
+	}
+	public void setAction(String action) {
+		this.action = action;
+	}
 	public long getOffsetId() {
 		return offsetId;
 	}

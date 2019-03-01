@@ -28,10 +28,10 @@ import muve.kafka.service.store.OffsetBeginningRebalanceListener;
 
 @Service
 public class MUVEConsumer implements Runnable {
+	public static String TOPIC = "muve_bookings_test";
 	
 	@Autowired
 	private BookingStore store;
-	
 	
 	private Gson gson = new Gson();
 	
@@ -51,38 +51,42 @@ public class MUVEConsumer implements Runnable {
 	
 	public void getAllBookings() {
 		KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(config());
-        consumer.subscribe(Arrays.asList("muve_bookings"), new OffsetBeginningRebalanceListener(consumer, "muve_bookings"));
+        consumer.subscribe(Arrays.asList(TOPIC), new OffsetBeginningRebalanceListener(consumer, TOPIC));
         JsonParser parser = new JsonParser();
         try {
             System.out.println("Starting Listener!");
             while (true) {
-                ConsumerRecords<String, String> records = consumer.poll(1000);
+                ConsumerRecords<String, String> records = consumer.poll(10000000);
                 if (records.isEmpty())
                     continue;
 
                 for (ConsumerRecord<String, String> cr : records) {
-                    JsonObject json = parser.parse(cr.value()).getAsJsonObject();
-                    String action = json.getAsJsonPrimitive("action").getAsString();
-                    JsonObject object = json.getAsJsonObject("object");
-                    Booking booking = gson.fromJson(object, Booking.class);
-                	booking.setOffsetId(cr.offset());
-                    if(action.equalsIgnoreCase("create")) {
-                    	booking.setEventId(Long.toString(cr.timestamp()));
+                	if(cr != null) {
+                		JsonObject json = parser.parse(cr.value()).getAsJsonObject();
+                        String action = json.getAsJsonPrimitive("action").getAsString();
+                        JsonObject object = json.getAsJsonObject("object");
+                        Booking booking = gson.fromJson(object, Booking.class);
+                    	booking.setOffsetId(cr.offset());
+                    	booking.setAction(action);
+                    	System.out.println("*******************");
+                    	System.out.println(cr.offset());
+                    	System.out.println("*******************");
+                        if(action.equalsIgnoreCase("create")) {
+                        	booking.setEventId(Long.toString(cr.timestamp()));
+                            store.save(booking);
+                            continue;
+                        }
+                        if(action.equalsIgnoreCase("delete")) {
+                        	store.delete(Long.toString(cr.offset()));
+                        	continue;
+                        }
                         store.save(booking);
-                        continue;
-                    }
-                    if(action.equalsIgnoreCase("delete")) {
-                    	store.delete(cr.key());
-                    	continue;
-                    }
-                    consumer.commitAsync();
-                    store.save(booking);
+                	}
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-        	consumer.commitSync();
             consumer.close();
         }
 	}

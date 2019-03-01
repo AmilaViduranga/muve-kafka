@@ -24,7 +24,7 @@ import muve.kafka.service.model.Booking;
 @Service
 public class MUVEProducer {
 	static Gson gson = new Gson();
-	static String TOPICNAME = "muve_bookings";
+	static String TOPICNAME = "muve_bookings_test";
 	
 	private Producer<String, String> createPRoducer() {
 		Properties props = new Properties();

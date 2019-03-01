@@ -9,7 +9,7 @@ import muve.kafka.service.model.Booking;
 
 
 public class BookingStore {
-	private Map<String,Booking> bookings = new HashMap<String, Booking>(10000000);
+	private Map<String,Booking> bookings = new HashMap<String, Booking>();
 
     public void save(Booking book) {
         bookings.put(Long.toString(book.getOffsetId()),book);
