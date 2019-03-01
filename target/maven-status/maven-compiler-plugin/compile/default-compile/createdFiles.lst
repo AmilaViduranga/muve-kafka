@@ -1,0 +1,4 @@
+muve/kafka/service/model/Booking.class
+muve/kafka/service/store/BookingStore.class
+muve/kafka/service/store/OffsetBeginningRebalanceListener.class
+muve/kafka/service/App.class
