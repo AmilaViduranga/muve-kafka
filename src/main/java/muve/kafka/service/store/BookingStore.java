@@ -5,21 +5,21 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import muve.kafka.service.model.Booking;
+import muve.kafka.service.model.BookingModel;
 
 
 public class BookingStore {
-	private Map<String,Booking> bookings = new HashMap<String, Booking>();
+	private Map<String,BookingModel> bookings = new HashMap<String, BookingModel>();
 
-    public void save(Booking book) {
+    public void save(BookingModel book) {
         bookings.put(Long.toString(book.getOffsetId()),book);
     }
 
-    public Collection<Booking> getAll() {
+    public Collection<BookingModel> getAll() {
         return bookings.values();
     }
 
-    public Booking get(String id) {
+    public BookingModel get(String id) {
         return bookings.get(id);
     }
 
@@ -31,10 +31,10 @@ public class BookingStore {
         bookings.remove(key);
     }
     
-    public Collection<Booking> getByBookingId(String id) {
-    	Map<String, Booking> availableBookings = new HashMap<String, Booking>();
-    	for(Map.Entry<String, Booking> entry : bookings.entrySet()) {
-    	    Booking searchedResult = entry.getValue();
+    public Collection<BookingModel> getByBookingId(String id) {
+    	Map<String, BookingModel> availableBookings = new HashMap<String, BookingModel>();
+    	for(Map.Entry<String, BookingModel> entry : bookings.entrySet()) {
+    	    BookingModel searchedResult = entry.getValue();
     	    if(searchedResult.getId().equals(id)) {
     	    	availableBookings.put(Long.toString(searchedResult.getOffsetId()), searchedResult);
     	    }

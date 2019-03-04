@@ -22,8 +22,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import muve.kafka.service.service.MUVEConsumer;
 import muve.kafka.service.store.BookingStore;
+import muve.kafka.service.utils.MUVEConsumer;
 
 
 /**
@@ -31,14 +31,14 @@ import muve.kafka.service.store.BookingStore;
  *
  */
 @SpringBootApplication
-public class App 
+public class Application 
 {
 	@Autowired
 	public Producer<String,String> producer;
 	
     public static void main( String[] args )
     {
-    	SpringApplication.run(App.class, args);
+    	SpringApplication.run(Application.class, args);
     }
     
     @Bean

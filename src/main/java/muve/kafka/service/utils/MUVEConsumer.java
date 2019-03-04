@@ -1,4 +1,4 @@
-package muve.kafka.service.service;
+package muve.kafka.service.utils;
 
 import static org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG;
@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import muve.kafka.service.model.Booking;
+import muve.kafka.service.model.BookingModel;
 import muve.kafka.service.store.BookingStore;
 import muve.kafka.service.store.OffsetBeginningRebalanceListener;
 
@@ -65,7 +65,7 @@ public class MUVEConsumer implements Runnable {
                 		JsonObject json = parser.parse(cr.value()).getAsJsonObject();
                         String action = json.getAsJsonPrimitive("action").getAsString();
                         JsonObject object = json.getAsJsonObject("object");
-                        Booking booking = gson.fromJson(object, Booking.class);
+                        BookingModel booking = gson.fromJson(object, BookingModel.class);
                     	booking.setOffsetId(cr.offset());
                     	booking.setAction(action);
                     	System.out.println("*******************");

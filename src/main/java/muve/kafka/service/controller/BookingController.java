@@ -19,14 +19,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.google.gson.Gson;
 
-import muve.kafka.service.model.Booking;
-import muve.kafka.service.service.MUVEProducer;
+import muve.kafka.service.model.BookingModel;
 import muve.kafka.service.store.BookingStore;
+import muve.kafka.service.utils.MUVEProducer;
 
 
 @RestController
 @RequestMapping("/booking")
-public class BookingAPI {
+public class BookingController {
 
 	@Autowired
 	private MUVEProducer muveProducer;
@@ -37,7 +37,7 @@ public class BookingAPI {
     Gson gson = new Gson();
 	
 	@PostMapping
-    public ResponseEntity<Void> save(@RequestBody Booking book,UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<Void> save(@RequestBody BookingModel book,UriComponentsBuilder uriBuilder) {
 		muveProducer.sendMessages(book);
         URI location = uriBuilder
                 .path("/booking/{id}")
@@ -47,12 +47,12 @@ public class BookingAPI {
 	
 	@GetMapping
 	@Primary
-    public Collection<Booking> getArticles() {
+    public Collection<BookingModel> getArticles() {
         return store.getAll();
     }
 	
 	@GetMapping("/{id}")
-    public Collection<Booking> getArticle(@PathVariable("id") String id) {
+    public Collection<BookingModel> getArticle(@PathVariable("id") String id) {
         return store.getByBookingId(id);
     }
 	
@@ -62,7 +62,7 @@ public class BookingAPI {
 //    }
 
     @PutMapping("/{id}")
-    public void update(@PathVariable("id") String id, @RequestBody Booking book) {
+    public void update(@PathVariable("id") String id, @RequestBody BookingModel book) {
         muveProducer.updateMessage(id, book);
     }
 

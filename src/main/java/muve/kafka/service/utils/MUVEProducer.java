@@ -1,4 +1,4 @@
-package muve.kafka.service.service;
+package muve.kafka.service.utils;
 
 import static org.apache.kafka.clients.producer.ProducerConfig.ACKS_CONFIG;
 import static org.apache.kafka.clients.producer.ProducerConfig.BATCH_SIZE_CONFIG;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import muve.kafka.service.model.Booking;
+import muve.kafka.service.model.BookingModel;
 
 @Service
 public class MUVEProducer {
@@ -40,7 +40,7 @@ public class MUVEProducer {
         return producer;
 	}
 	
-	public void sendMessages(Booking book) {
+	public void sendMessages(BookingModel book) {
 		Producer<String, String> producer = this.createPRoducer();
         producer.send(new ProducerRecord<String, String>(TOPICNAME, book.getId(), createWrapper(book)));
         producer.close();
@@ -51,12 +51,12 @@ public class MUVEProducer {
 		producer.send(new ProducerRecord<String, String>(TOPICNAME, id, deleteWrapper(id)));
 	}
 	
-	public void updateMessage(String id, Booking book) {
+	public void updateMessage(String id, BookingModel book) {
 		Producer<String, String> producer = this.createPRoducer();
 		producer.send(new ProducerRecord<String, String>(TOPICNAME, id, putWrapper(book)));
 	}
 	
-	private static String createWrapper(Booking book) {
+	private static String createWrapper(BookingModel book) {
 	        JsonObject cmd = new JsonObject();
 	        cmd.addProperty("action", "create");
 	        cmd.add("object", gson.toJsonTree(book));
@@ -69,7 +69,7 @@ public class MUVEProducer {
         return cmd.toString();
     }
 
-    private String putWrapper(Booking book) {
+    private String putWrapper(BookingModel book) {
         JsonObject cmd = new JsonObject();
         cmd.addProperty("action", "update");
         cmd.add("object", gson.toJsonTree(book));
